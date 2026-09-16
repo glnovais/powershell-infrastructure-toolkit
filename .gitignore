@@ -1,0 +1,21 @@
+# Outputs
+*.csv
+*.log
+*.xml
+*.html
+
+# Credenciais / segredos
+*.key
+*.pem
+*.pfx
+*.p12
+*.cred
+
+# Temporários
+*.tmp
+*.bak
+~*
+
+# Editor
+.vscode/
+.idea/
