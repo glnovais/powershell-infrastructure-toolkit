@@ -1,29 +1,39 @@
 <#
 .SYNOPSIS
-    Consulta rapidamente o usuário de um computador pelo hostname.
+    Consulta o usuário atualmente logado em um computador remoto por IP ou hostname.
 #>
 
-$ComputerName = Read-Host "Digite o hostname do computador"
+$PC = Read-Host "Digite o IP ou hostname do computador"
 
-Write-Host "`nConsultando $ComputerName..." -ForegroundColor Cyan
+Write-Host "`nConsultando $PC..." -ForegroundColor Cyan
+
+if (-not (Test-Connection -ComputerName $PC -Count 1 -Quiet)) {
+    Write-Host "Computador não respondeu ao ping." -ForegroundColor Red
+    return
+}
 
 try {
-    Invoke-Command -ComputerName $ComputerName -ErrorAction Stop -ScriptBlock {
-        $currentUser = (Get-CimInstance Win32_ComputerSystem).UserName
+    $Usuario = (Get-CimInstance Win32_ComputerSystem -ComputerName $PC -ErrorAction Stop).UserName
 
-        $lastUser = Get-ItemProperty `
-            "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI" `
-            -Name LastLoggedOnUser `
-            -ErrorAction SilentlyContinue
+    Write-Host "`n==============================" -ForegroundColor DarkGray
+    Write-Host "Computador : $PC"
 
-        [PSCustomObject]@{
-            Hostname            = $env:COMPUTERNAME
-            UsuarioLogadoAgora  = if ($currentUser) { $currentUser } else { "Nenhum usuário logado" }
-            UltimoUsuarioLogado = $lastUser.LastLoggedOnUser
-        }
-    } | Format-List
+    if ($Usuario) {
+        Write-Host "Usuário     : $Usuario" -ForegroundColor Green
+    }
+    else {
+        Write-Host "Usuário     : Nenhum usuário logado" -ForegroundColor Yellow
+    }
+
+    Write-Host "==============================" -ForegroundColor DarkGray
 }
 catch {
-    Write-Host "Erro ao consultar $ComputerName" -ForegroundColor Red
-    Write-Host $_.Exception.Message -ForegroundColor DarkRed
+    Write-Host "`nCIM não respondeu. Tentando via QUSER..." -ForegroundColor Yellow
+
+    try {
+        quser /server:$PC
+    }
+    catch {
+        Write-Host "Não foi possível consultar o computador." -ForegroundColor Red
+    }
 }
