@@ -77,7 +77,7 @@ powershell-infrastructure-toolkit/
 
 | Script | Finalidade |
 |---|---|
-| `Get-LoggedOnUserByHostname.ps1` | Consulta rápida por hostname |
+| `Get-LoggedOnUserByHostname.ps1` | Consulta rápida do usuário logado por IP ou hostname |
 | `Test-RDPStatus.ps1` | Verifica disponibilidade e configuração do RDP |
 | `Get-RemoteDiskSpace.ps1` | Consulta espaço em disco |
 | `Get-CriticalServices.ps1` | Verifica serviços críticos |
@@ -114,6 +114,9 @@ Também podem ser necessários RSAT, permissões administrativas e PowerShell Re
 
 # Testar portas em massa
 .\Network\Test-TCPPortFleet.ps1 -ComputerName server01,server02 -Port 80,443,3389
+
+# Consultar usuário logado por IP ou hostname
+.\Support\Get-LoggedOnUserByHostname.ps1
 
 # Criar relatório de diagnóstico
 .\Diagnostics\New-EndpointDiagnosticReport.ps1 -ComputerName PC001
