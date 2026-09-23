@@ -46,6 +46,9 @@ powershell-infrastructure-toolkit/
 | `Get-InactiveADComputers.ps1` | Classifica computadores por tempo de inatividade |
 | `Test-ComputerSecureChannelStatus.ps1` | Verifica o canal seguro com o domínio |
 | `Repair-ComputerSecureChannel.ps1` | Repara o canal seguro com confirmação |
+| `Repair-DomainTrustRemote.ps1` | Diagnostica e repara confiança remotamente via WinRM, com fallback e RDP opcional |
+
+Procedimento detalhado: `ActiveDirectory/PROCEDIMENTO_REPARO_REMOTO_CONFIANCA_DOMINIO.md`.
 
 ## Group Policy
 
@@ -117,6 +120,9 @@ Também podem ser necessários RSAT, permissões administrativas e PowerShell Re
 
 # Consultar usuário logado por IP ou hostname
 .\Support\Get-LoggedOnUserByHostname.ps1
+
+# Reparar remotamente a confiança de um computador com o domínio
+.\ActiveDirectory\Repair-DomainTrustRemote.ps1 -ComputerName PC001 -IPAddress 10.0.0.50 -DomainName corp.local
 
 # Criar relatório de diagnóstico
 .\Diagnostics\New-EndpointDiagnosticReport.ps1 -ComputerName PC001
